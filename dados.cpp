@@ -12,7 +12,7 @@ void dibujarDado(int numero, int posx, int posy){
 
 
 //Efecto
-int efectoDado (){
+int efectoDado (int sim){
 int posy[6]{rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1};
     bool seleccionados[6]{};
     int dados[6]; //guardo el valor
@@ -33,7 +33,7 @@ int posy[6]{rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1};
        }
        seleccionados[posx] = true;
 
-     dados[posx] = tirarDado((posx+1)*10, posy[posx]);//guarda valor de dado
+     dados[posx] = tirarDado((posx+1)*10, posy[posx],sim);//guarda valor de dado
 
 
 
@@ -95,7 +95,7 @@ int posy[6]{rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1};
     }
 
 
-  
+
     int sumaPuntos = 0;
     for (int i = 0; i < 6; i++) {
         sumaPuntos += dados[i];
@@ -108,8 +108,14 @@ int posy[6]{rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1,rand()%6+1};
 //Tirar
 
 
-int tirarDado(int posx, int posy){
-    int dado = rand()%6 + 1;
+int tirarDado(int posx, int posy, int sim){
+    int dado;
+    if(sim==1){
+        cin>>dado;
+    }
+    else{
+    dado = rand()%6 + 1;
+    }
 
     for(int i=0; i<15; i++){
     dibujarDado(rand()%6+1, posx,posy);

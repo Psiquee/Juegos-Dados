@@ -7,8 +7,8 @@ void dibujarSombra( int posx, int posy);
 
 void dibujarPuntos(int numero, int posx, int posy);
 
-int tirarDado(int posx, int posy);
+int tirarDado(int posx, int posy, int sim);
 
 int analizarValor(int dados[6]);
 
-int efectoDado();
+int efectoDado(int sim);

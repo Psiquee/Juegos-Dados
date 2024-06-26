@@ -6,13 +6,13 @@
 
 using namespace std;
 
-int jugarRonda()
+int jugarRonda(int sim)
 {
     int maxPuntajeRonda = 0;
 
     for (int i = 0; i < 3; i++)
     {
-        int puntajeLanzamiento = efectoDado();
+        int puntajeLanzamiento = efectoDado(sim);
         system("cls");
 
         if (puntajeLanzamiento == 6)
@@ -60,11 +60,12 @@ int jugarModoUnJugador(char nombre[])
 {
     int puntaje = 0;
     int ronda = 0;
+    int sim=0;
 
     while (puntaje < 100)
     {
         ++ronda;
-        int puntajeRonda = jugarRonda();
+        int puntajeRonda = jugarRonda(sim);
         puntaje += puntajeRonda;
 
         cout << "Ronda " << ronda << ": Puntaje maximo de la ronda = " << puntajeRonda << " | Puntaje acumulado = " << puntaje << endl;
@@ -79,17 +80,18 @@ int jugarModoUnJugador(char nombre[])
     return puntaje;
 }
 
-void jugarModoDosJugadores(char nombre1[], char nombre2[])
+int jugarModoDosJugadores(char nombre1[], char nombre2[])
 {
     int puntaje1 = 0, puntaje2 = 0;
     int ronda1 = 0, ronda2 = 0;
-    int puntajeMax = 0; //guarda el valor del puntaje max
+    int puntajeMax = 0,puntajeMaximo=0; //guarda el valor del puntaje max
     char nombreMax[30] = ""; //nombre del jugador con puntaje maximo
+    int sim=0;
 
     while (puntaje1 < 100 && puntaje2 < 100)
     {
         ++ronda1;
-        int puntajeRonda1 = jugarRonda();
+        int puntajeRonda1 = jugarRonda(sim);
         puntaje1 += puntajeRonda1;
 
         if (puntajeRonda1 > puntajeMax)
@@ -107,14 +109,14 @@ void jugarModoDosJugadores(char nombre1[], char nombre2[])
         if (puntaje1 >= 100) break;
 
         ++ronda2;
-        int puntajeRonda2 = jugarRonda();
+        int puntajeRonda2 = jugarRonda(sim);
         puntaje2 += puntajeRonda2;
 
         if (puntajeRonda2 > puntajeMax)
         {
             puntajeMax = puntajeRonda2;
             copiarVector(nombre2, nombreMax, 30);
-
+        }
 
         cout << "Ronda " << ronda2 << " de " << nombre2 << ": Puntaje de la ronda = " << puntajeRonda2 << " | Puntaje acumulado = " << puntaje2 << endl;
         system("pause");
@@ -125,18 +127,27 @@ void jugarModoDosJugadores(char nombre1[], char nombre2[])
     {
         cout << "Felicidades, " << nombre1 << ". Has alcanzado " << puntaje1 << " puntos en " << ronda1 << " rondas y has ganado." << endl;
         cout << nombre2 << " ha alcanzado " << puntaje2 << " puntos en " << ronda2 << " rondas." << endl;
+
     }
     else if (puntaje2 >= 100)
     {
         cout << "Felicidades, " << nombre2 << ". Has alcanzado " << puntaje2 << " puntos en " << ronda2 << " rondas y has ganado." << endl;
         cout << nombre1 << " ha alcanzado " << puntaje1 << " puntos en " << ronda1 << " rondas." << endl;
+
     }
 
     system("pause");
     system("cls");
-}
 
-void mostrarPuntajeMaximo(int puntajeMax, char nombreMax[])
+
+    if (puntaje1>puntaje2){
+        return puntaje1+1000;
+    }
+    else{
+       return puntaje2+2000;
+    }
+}
+void mostrarPuntajeMaximo(int puntajeMax, char nombreMax[],int puntajeMax2J,char nomMax2[])
 {
     if (puntajeMax > 0)
     {
@@ -144,9 +155,14 @@ void mostrarPuntajeMaximo(int puntajeMax, char nombreMax[])
     }
     else
     {
-        cout << "Aun no hay un puntaje registrado en esta sesion." << endl;
+        cout << "Aun no hay un puntaje registrado en esta sesion para partidas de 1 jugador." << endl;
     }
-
+    if  (puntajeMax2J==0){
+         cout << "Aun no hay un puntaje registrado en esta sesion para partidas de 2 jugadores." << endl;
+    }
+    else{
+        cout <<"Puntaje maximo alcanzado en partida de 2 Jugadores: "<<puntajeMax2J<<" por el jugador "<<nomMax2 <<endl;
+    }
     system("pause");
     system("cls");
 }
@@ -155,8 +171,9 @@ void menu()
 {
     int modoJuego;
     int puntajeMax = 0;
+    int puntajeMax2J = 0;
     char nombreMax[30] = "";
-
+    char nomMax2J[30]="";
     while (true)
     {
         cout << "---MENU PRINCIPAL---" << endl;
@@ -201,14 +218,33 @@ void menu()
                 system("pause");
                 system("cls");
 
-                jugarModoDosJugadores(nombre1, nombre2);
+                int puntaje2 = jugarModoDosJugadores(nombre1, nombre2);
+                if (puntaje2>2000){
+                    if (puntaje2-2000>puntajeMax2J){
+                        copiarVector(nombre2, nomMax2J, 30);
+                        puntajeMax2J=puntaje2-2000;
+                    }
+                }
+                 if (puntaje2>1000&&puntaje2<2000){
+                    if (puntaje2-1000>puntajeMax2J){
+                        copiarVector(nombre1, nomMax2J, 30);
+                        puntajeMax2J=puntaje2-1000;
+                    }
+                }
                 break;
             }
         case 3:
-            mostrarPuntajeMaximo(puntajeMax, nombreMax);
+            mostrarPuntajeMaximo(puntajeMax, nombreMax, puntajeMax2J, nomMax2J);
             break;
         case 4:
             return;
+        case 777:{
+            int sim=1;
+            jugarRonda(sim);
+            system("pause");
+            system("cls");
+            break;
+            }
         default:
             cout << "Opcion incorrecta, intente nuevamente." << endl;
             system("pause");
